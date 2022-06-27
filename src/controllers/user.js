@@ -13,14 +13,19 @@ export const register = async (req, res) => {
 	) {
 		return res.status(400).send('Bad HTTP request');
 	}
-	const salt = await bcrypt.genSalt();
-	const hashedPassword = await bcrypt.hash(req.body.password, salt);
-	const user = await User.create({
-		forename: req.body.forename,
-		surname: req.body.surname,
-		email: req.body.email,
-		password: hashedPassword,
-	});
+	try {
+		const salt = await bcrypt.genSalt();
+		const hashedPassword = await bcrypt.hash(req.body.password, salt);
+		const user = await User.create({
+			forename: req.body.forename,
+			surname: req.body.surname,
+			email: req.body.email,
+			password: hashedPassword,
+		});
+		res.status(200).send(user)
+	} catch (e) {
+		res.status(500).send('Something went wrong, try again later')
+	}
 };
 
 export const login = async (req, res) => {
