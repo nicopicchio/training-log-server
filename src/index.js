@@ -8,7 +8,9 @@ const app = express();
 const port = process.env.PORT;
 const dbURI = process.env.DB_URI;
 
-mongoose.connect(dbURI);
+mongoose.connect(dbURI, {
+  useNewUrlParser: true
+});
 
 app.use(cors());
 app.use(express.json());

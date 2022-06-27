@@ -11,7 +11,7 @@ export const register = async (req, res) => {
 		!req.body.email ||
 		!req.body.password
 	) {
-		return res.status(400).json('Bad HTTP request');
+		return res.status(400).send('Bad HTTP request');
 	}
 	const salt = await bcrypt.genSalt();
 	const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -21,7 +21,6 @@ export const register = async (req, res) => {
 		email: req.body.email,
 		password: hashedPassword,
 	});
-	console.log(user);
 };
 
 export const login = async (req, res) => {
@@ -32,6 +31,11 @@ export const login = async (req, res) => {
 	);
 	if (matchingUser && matchingPassword) {
 		const token = jwt.sign(matchingUser[0].email, secretKey)
-		console.log(token, matchingUser[0])
-	} else console.log('access denied')
+		const response = {
+			token: token,
+			user: matchingUser[0]
+		}
+		res.status(200).send(response)
+		return
+	} else res.status(401).send('Invalid username and/or password!')
 };
