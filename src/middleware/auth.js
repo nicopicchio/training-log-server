@@ -29,8 +29,9 @@ export async function validateAuthentication(req, res, next) {
 
 	const decodedToken = jwt.decode(token);
 	const matchingUser = await User.find({ email: decodedToken });
-
-	next();
+	if (matchingUser) {
+		next();
+	}
 }
 
 function validateToken(token) {
