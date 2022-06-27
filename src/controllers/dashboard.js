@@ -5,5 +5,6 @@ export const getData = async (req, res) => {
 }
 
 export const addData = async (req,res) => {
-  const matchingUser = await User.find()
+  // const matchingUser = await User.find()
+  console.log('data added')
 }
