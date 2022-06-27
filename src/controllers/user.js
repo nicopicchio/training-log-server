@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import User from '../../models/user.js';
 
-// const secretKey = process.env.SECRET_KEY;
+const secretKey = process.env.SECRET_KEY;
 
 export const register = async (req, res) => {
 	if (
@@ -19,7 +19,19 @@ export const register = async (req, res) => {
 		forename: req.body.forename,
 		surname: req.body.surname,
 		email: req.body.email,
-		password: hashedPassword
+		password: hashedPassword,
 	});
-	console.log(user)
+	console.log(user);
+};
+
+export const login = async (req, res) => {
+	const matchingUser = await User.find({ email: req.body.email });
+	const matchingPassword = await bcrypt.compare(
+		req.body.password,
+		matchingUser[0].password
+	);
+	if (matchingUser && matchingPassword) {
+		const token = jwt.sign(matchingUser[0].email, secretKey)
+		console.log(token, matchingUser[0])
+	} else console.log('access denied')
 };
