@@ -11,7 +11,7 @@ export const register = async (req, res) => {
 		!req.body.email ||
 		!req.body.password
 	) {
-		return res.status(400).send('Bad HTTP request');
+		return res.status(400).send('Bad HTTP request!');
 	}
 	try {
 		const salt = await bcrypt.genSalt();
