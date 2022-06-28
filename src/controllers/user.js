@@ -6,8 +6,8 @@ const secretKey = process.env.SECRET_KEY;
 
 export const register = async (req, res) => {
 	if (
-		!req.body.forename ||
-		!req.body.surname ||
+		!req.body.firstName ||
+		!req.body.lastName ||
 		!req.body.email ||
 		!req.body.password
 	) {
@@ -17,8 +17,8 @@ export const register = async (req, res) => {
 		const salt = await bcrypt.genSalt();
 		const hashedPassword = await bcrypt.hash(req.body.password, salt);
 		const user = await User.create({
-			forename: req.body.forename,
-			surname: req.body.surname,
+			firstName: req.body.firstName,
+			lastName: req.body.lastName,
 			email: req.body.email,
 			password: hashedPassword,
 		});
