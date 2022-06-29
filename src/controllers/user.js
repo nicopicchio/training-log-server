@@ -11,7 +11,7 @@ export const register = async (req, res) => {
 		!req.body.email ||
 		!req.body.password
 	) {
-		return res.status(400).send('Bad HTTP request!');
+		return res.status(400).send('Missing registration details!');
 	}
 	try {
 		const salt = await bcrypt.genSalt();
@@ -29,6 +29,9 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+	if (!req.body.email || !req.body.password) {
+		return res.status(400).send('Missing login details!')
+	}
 	const matchingUser = await User.find({ email: req.body.email });
 	const matchingPassword = await bcrypt.compare(
 		req.body.password,
@@ -42,5 +45,5 @@ export const login = async (req, res) => {
 		}
 		res.status(200).send(response)
 		return
-	} else res.status(401).send('Invalid username and/or password!')
+	} else res.status(401).send('Invalid login credentials!')
 };
