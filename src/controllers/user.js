@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import e from 'cors';
 import jwt from 'jsonwebtoken';
 import User from '../../models/user.js';
 
@@ -14,6 +15,10 @@ export const register = async (req, res) => {
 		return res.status(400).send('Missing registration details!');
 	}
 	try {
+		const existingUser = await User.find({ email: req.body.email });
+		if (existingUser.length !== 0) {
+			return res.status(400).send('Email already in use!');
+		}
 		const salt = await bcrypt.genSalt();
 		const hashedPassword = await bcrypt.hash(req.body.password, salt);
 		const user = await User.create({
@@ -22,15 +27,15 @@ export const register = async (req, res) => {
 			email: req.body.email,
 			password: hashedPassword,
 		});
-		res.status(200).send(user)
+		res.status(201).send(user);
 	} catch (e) {
-		res.status(500).send('Something went wrong, try again later')
+		res.status(500).send('Something went wrong, try again later');
 	}
 };
 
 export const login = async (req, res) => {
 	if (!req.body.email || !req.body.password) {
-		return res.status(400).send('Missing login details!')
+		return res.status(400).send('Missing login details!');
 	}
 	const matchingUser = await User.find({ email: req.body.email });
 	const matchingPassword = await bcrypt.compare(
@@ -38,12 +43,12 @@ export const login = async (req, res) => {
 		matchingUser[0].password
 	);
 	if (matchingUser && matchingPassword) {
-		const token = jwt.sign(matchingUser[0].email, secretKey)
+		const token = jwt.sign(matchingUser[0].email, secretKey);
 		const response = {
 			token: token,
-			user: matchingUser[0]
-		}
-		res.status(200).send(response)
-		return
-	} else res.status(401).send('Invalid login credentials!')
+			user: matchingUser[0],
+		};
+		res.status(200).send(response);
+		return;
+	} else res.status(401).send('Invalid login credentials!');
 };
