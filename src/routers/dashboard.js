@@ -5,6 +5,6 @@ import { validateAuthentication } from '../middleware/auth.js';
 const dashboardRouter = express.Router();
 
 dashboardRouter.get('/', validateAuthentication, getData)
-dashboardRouter.post('/', validateAuthentication, addData);
+dashboardRouter.patch('/', validateAuthentication, addData);
 
 export default dashboardRouter;

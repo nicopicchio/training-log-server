@@ -21,11 +21,12 @@ const userSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		sleep: [Number],
-		fatigue: [Number],
-		restHR: [Number],
-		weight: [Number],
-		training: [Number],
+		datasets: {
+			sleep: [Number],
+			fatigue: [Number],
+			restHR: [Number],
+			weight: [Number],
+		}
 	},
 	{ timestamps: true }
 );
