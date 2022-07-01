@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import e from 'cors';
 import jwt from 'jsonwebtoken';
 import User from '../../models/user.js';
 
